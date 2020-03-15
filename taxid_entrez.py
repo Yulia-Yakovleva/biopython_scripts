@@ -9,19 +9,22 @@ contigs_path = '/home/yulia/PycharmProjects/g_paramecii/contigs500bp.fasta'
 out_path = '/home/yulia/PycharmProjects/g_paramecii/fungi_contigs.fasta'
 desired_taxon = 'Fungi'
 
-# парсим айдишники классифицированных контихов
+# парсим айдишники классифицированных контигов
 kaiju_out = pd.read_csv(kaiju_path, sep='\t', header=None)
 taxids = list(set(kaiju_out.loc[kaiju_out[0] == 'C'][2]))
+my_ids = " ".join(str(x) for x in taxids)
 
 # узнаем, что это за айдишники
-handle = Entrez.efetch(db="Taxonomy", id=" ".join(str(x) for x in taxids), retmode="xml")
+handle = Entrez.efetch(db="Taxonomy", id=my_ids, retmode="xml")
 records = Entrez.read(handle)
 
-# получаем список айдишников, которые принаждежат грибам
+# получаем список айдишников, которые принадлежат грибам
 Fungi_ids = []
 for record in records:
-    if desired_taxon in record["Lineage"]:
-        Fungi_ids.append(str(record["TaxId"]))
+    if desired_taxon in str(record['Lineage']):
+        Fungi_ids.append(str(record['TaxId']))
+        for subrecord in record['LineageEx']:
+            Fungi_ids.append(str(subrecord['TaxId']))
 
 # получаем список контигов, которые принадлежат грибам
 contig_names = []
@@ -33,4 +36,5 @@ for col, row in kaiju_out.iterrows():
 contigs = SeqIO.parse(contigs_path, "fasta")
 with open(out_path, 'w') as out_f:
     for seq in contigs:
-        SeqIO.write(seq, out_f, "fasta")
+        if seq.name in set(contig_names):
+            SeqIO.write(seq, out_f, "fasta")
