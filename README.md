@@ -1,8 +1,10 @@
 ### It is time to arrange your python scripts...
 My biopython scripts
 
-**taxid_entrez.py** пробивает айдишники таксонов в ncbi и парсит аутпут kaiju
+**exctract_unclassified.py** вытаскивает неклассифицированные контиги по аутпуту kaiju
 
 **fasta_to_phylip.py** конвертирует выравнивание
 
-**exctract_unclassified.py** вытаскивает неклассифицированные контиги по аутпуту kaiju
+**get_assemblies.py** скелет для получения информации по сборкам и ссылки на скачивания .fna .gff и т.д.
+
+**taxid_entrez.py** пробивает айдишники таксонов в ncbi и парсит аутпут kaiju
